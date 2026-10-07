@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아이와 같이 떠나는 여행 장소</title>
+    <style>
+        :root {
+            --bg-color: #FFF9F2;
+            --card-bg: #FFFFFF;
+            --primary: #FF8A00;
+            --primary-light: #FFEAD2;
+            --secondary: #4ECDC4;
+            --secondary-light: #E8F8F5;
+            --text-dark: #2C3E50;
+            --text-muted: #6C7A89;
+            --shadow: 0 10px 25px -5px rgba(255, 138, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            --radius: 20px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 20px 15px;
+            font-size: 18px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 35px 20px;
+            background: linear-gradient(135deg, #FFD166 0%, #FF8A00 100%);
+            border-radius: var(--radius);
+            color: white;
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            word-break: keep-all;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        header p {
+            font-size: 1.15rem;
+            opacity: 0.95;
+            font-weight: 500;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin: 30px 0 15px 5px;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 640px) {
+            .card-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            border: 2px solid #FFF0DF;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px -5px rgba(255, 138, 0, 0.25);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: inline-block;
+            background: var(--primary-light);
+            padding: 12px;
+            border-radius: 16px;
+        }
+
+        .card h3 {
+            font-size: 1.35rem;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+        }
+
+        .card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .card ul li {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 10px;
+            font-size: 1.05rem;
+            color: var(--text-dark);
+            word-break: keep-all;
+        }
+
+        .card ul li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .checklist-card {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            border: 2px solid #E0F7F5;
+            margin-top: 10px;
+        }
+
+        .checklist-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .add-box {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .add-box input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 2px solid #E2E8F0;
+            border-radius: 14px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .add-box input:focus {
+            border-color: var(--secondary);
+        }
+
+        .add-box button {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 14px 22px;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+
+        .add-box button:hover {
+            background-color: #3BBBB3;
+        }
+
+        .checklist-items {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            background-color: #F8FAFC;
+            padding: 14px 18px;
+            border-radius: 14px;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s, transform 0.1s;
+            border: 1px solid #EDF2F7;
+        }
+
+        .check-item:active {
+            transform: scale(0.99);
+        }
+
+        .check-item.completed {
+            background-color: #F1F5F9;
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .check-item input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            margin-right: 14px;
+            accent-color: var(--secondary);
+            cursor: pointer;
+        }
+
+        .check-item label {
+            flex: 1;
+            cursor: pointer;
+            font-size: 1.05rem;
+            word-break: keep-all;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #A0AEC0;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 8px;
+        }
+
+        .delete-btn:hover {
+            color: #E53E3E;
+            background-color: #FED7D7;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>👶 아이와 같이 떠나는 여행</h1>
+            <p>우리 아이와 만드는 행복하고 편안한 추억!</p>
+        </header>
+
+        <h2 class="section-title">🍽️ 추천 맛집 선택 기준</h2>
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-icon">🪑</div>
+                <h3>아이 편의시설 갖춘 곳</h3>
+                <ul>
+                    <li>아기의자와 전용 수저가 잘 준비된 곳</li>
+                    <li>유모차가 넉넉하게 들어가는 넓은 좌석</li>
+                    <li>아이 좌식 테이블이나 방 형태의 공간</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">🍲</div>
+                <h3>아이가 먹기 좋은 메뉴</h3>
+                <ul>
+                    <li>자극적이지 않고 자를 수 있는 메뉴</li>
+                    <li>생선구이, 계란찜, 맑은 국물 요리</li>
+                    <li>아기 전용 볶음밥이나 미역국 제공 식당</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2 class="section-title">🎡 추천 체험 & 놀이 장소</h2>
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-icon">🌳</div>
+                <h3>야외 마음껏 뛰어놀기</h3>
+                <ul>
+                    <li>위험 요소가 적고 잔디밭이 넓은 공원</li>
+                    <li>동물 친구들을 가까이 보는 체험 농장</li>
+                    <li>안전하게 탈 수 있는 유아 전용 놀이터</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">🎨</div>
+                <h3>실내 오감 만족 체험</h3>
+                <ul>
+                    <li>날씨 상관없는 대형 키즈카페</li>
+                    <li>손으로 만지는 어린이 체험 박물관</li>
+                    <li>아이가 좋아하는 캐릭터 테마파크</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2 class="section-title">📋 아이와 여행 준비 체크리스트</h2>
+        <div class="checklist-card">
+            <div class="add-box">
+                <input type="text" id="newItemInput" placeholder="추가할 챙길 물건이나 장소를 입력하세요..." onkeypress="handleKeyPress(event)">
+                <button onclick="addItem()">추가</button>
+            </div>
+
+            <div class="checklist-items" id="checklist">
+                <!-- Checklist items loaded dynamically via JS -->
+            </div>
+        </div>
+
+        <footer>
+            <p>🎈 아이와 함께 따뜻하고 즐거운 여행 만드세요!</p>
+        </footer>
+    </div>
+
+    <script>
+        // 초기 기본 체크리스트 데이터
+        const defaultItems = [
+            { text: "아기 기저귀 및 물티슈 넉넉히 챙기기", checked: false },
+            { text: "아이용 분유, 이유식, 보온병 준비", checked: false },
+            { text: "평소 좋아하는 간식 및 아기 음료수", checked: false },
+            { text: "애착 인형 및 장난감 챙기기", checked: false },
+            { text: "여벌 옷 두 세트 및 얇은 겉옷", checked: false },
+            { text: "아기 비상약 (체온계, 해열제, 연고)", checked: false },
+            { text: "아기의자 있는 식당 위치 미리 확인하기", checked: false }
+        ];
+
+        // 로컬스토리지 또는 기본값 로드
+        let items = JSON.parse(localStorage.getItem('babyTravelChecklist')) || defaultItems;
+
+        // 화면에 체크리스트 그리기
+        function renderChecklist() {
+            const listContainer = document.getElementById('checklist');
+            listContainer.innerHTML = '';
+
+            items.forEach((item, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = `check-item ${item.checked ? 'completed' : ''}`;
+                itemDiv.onclick = (e) => {
+                    if (e.target.tagName !== 'BUTTON' && e.target.tagName !== 'I') {
+                        toggleCheck(index);
+                    }
+                };
+
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = item.checked;
+                checkbox.onchange = () => toggleCheck(index);
+
+                const label = document.createElement('label');
+                label.textContent = item.text;
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.innerHTML = '✕';
+                deleteBtn.title = '삭제';
+                deleteBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    removeItem(index);
+                };
+
+                itemDiv.appendChild(checkbox);
+                itemDiv.appendChild(label);
+                itemDiv.appendChild(deleteBtn);
+
+                listContainer.appendChild(itemDiv);
+            });
+
+            // 저장
+            localStorage.setItem('babyTravelChecklist', JSON.stringify(items));
+        }
+
+        // 체크 상태 반전
+        function toggleCheck(index) {
+            items[index].checked = !items[index].checked;
+            renderChecklist();
+        }
+
+        // 아이템 추가
+        function addItem() {
+            const input = document.getElementById('newItemInput');
+            const text = input.value.trim();
+
+            if (text !== '') {
+                items.push({ text: text, checked: false });
+                input.value = '';
+                renderChecklist();
+            }
+        }
+
+        // 엔터키 입력 처리
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                addItem();
+            }
+        }
+
+        // 아이템 삭제
+        function removeItem(index) {
+            items.splice(index, 1);
+            renderChecklist();
+        }
+
+        // 페이지 로드 시 실행
+        window.onload = function() {
+            renderChecklist();
+        };
+    </script>
+</body>
+</html>
